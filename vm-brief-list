@@ -1,0 +1,7 @@
+#!/bin/bash
+vms=$(ls -d /vmtank/*)
+
+for vm in $vms; do
+  basename $vm
+done
+
