@@ -1,0 +1,2 @@
+NAME=$(date +"%s")
+zfs snapshot -r vmtank/$1@$NAME

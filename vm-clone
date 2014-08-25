@@ -1,0 +1,22 @@
+FROM=$1
+TO=$2
+
+set -e
+
+nic=$2_nic0
+latest=$(vm-list-snapshots $1 | tail -n 1)
+disk=$(vm-list-snapshots $1/disk0 | tail -n1)
+
+zfs clone $latest vmtank/$2
+zfs clone $disk vmtank/$2/disk0
+
+dladm create-vnic -l rge0 $nic
+
+cat >/vmtank/$TO/config.sh <<EOF
+NAME=$2
+NIC=$nic
+VNC=0
+MEM=512
+CPUS=1
+EOF
+

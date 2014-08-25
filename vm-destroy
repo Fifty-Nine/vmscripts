@@ -1,0 +1,2 @@
+dladm delete-vnic $1_nic0
+zfs destroy -r vmtank/$1

@@ -1,0 +1,2 @@
+#!/bin/bash
+zfs list -t snapshot -d1 -o name -s creation vmtank/$1 | tail -n +2
