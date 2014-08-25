@@ -1,0 +1,22 @@
+#!/bin/bash
+vms=$(ls -d /vmtank/*)
+
+for vm in $vms; do
+  name=$(basename $vm)
+  pid=$(test -f $vm/pid && cat $vm/pid)
+  echo $name:
+  echo -n "  running: "
+  if [ -z "$pid" ]; then
+    echo "no"
+  else
+    echo "yes"
+    echo "  pid: $pid"
+  fi
+  . $vm/config.sh
+  echo "  nic: $NIC"
+  echo "  vnc: $VNC"
+  echo "  mem: $MEM"
+  echo "  cpus: $CPUS"
+  echo
+done
+
