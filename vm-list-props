@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cat <<EOF
+running
+pid
+nic
+vnc
+mem
+cpus
+mac
+autostart
+EOF
