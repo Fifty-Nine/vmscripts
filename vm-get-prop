@@ -11,7 +11,7 @@ pid)
   test -f $vmdir/pid && cat $vmdir/pid || echo -1
   ;;
 running)
-  test "$(vm-get-prop pid $name)" != "-1" && echo yes || echo no
+  test "$(vm-get-prop pid $name)" != "-1"; echo $?
   ;;
 mac)
   dladm show-vnic -po macaddress $NIC 
