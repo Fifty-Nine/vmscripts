@@ -8,10 +8,11 @@ vmdir=/vmtank/$name
 
 case $prop in
 pid)
-  test -f $vmdir/pid && cat $vmdir/pid || echo -1
+  pid=$(test -f $vmdir/pid && cat $vmdir/pid || echo -1)
+  test -d /proc/$pid && echo $pid || echo -1
   ;;
 running)
-  test "$(vm-get-prop pid $name)" != "-1"; echo $?
+  test "$(vm-get-prop pid $name)" == "-1"; echo $?
   ;;
 mac)
   dladm show-vnic -po macaddress $NIC 
