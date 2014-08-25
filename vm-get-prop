@@ -1,0 +1,23 @@
+#!/bin/bash
+
+prop=$1
+name=$2
+
+vmdir=/vmtank/$name
+. $vmdir/config.sh
+
+case $prop in
+pid)
+  test -f $vmdir/pid && cat $vmdir/pid || echo -1
+  ;;
+running)
+  test "$(vm-get-prop pid $name)" != "-1" && echo yes || echo no
+  ;;
+mac)
+  dladm show-vnic -po macaddress $NIC 
+  ;;
+*)
+  prop=$(echo $prop | tr '[:lower:]' '[:upper:]')
+  eval "echo \$$prop"
+  ;;
+esac
