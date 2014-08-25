@@ -1,0 +1,16 @@
+#!/bin/bash
+
+vms=$(vm-brief-list)
+
+for vm in $vms; do
+  . /vmtank/$vm/config.sh
+
+  autostart=$(vm-get-prop autostart $vm)
+  running=$(vm-get-prop running $vm)
+
+  if [[ $autostart -eq 1 && $running -eq 0 ]]; then
+    echo Starting $vm
+    vm-start $vm
+  fi
+done
+  
