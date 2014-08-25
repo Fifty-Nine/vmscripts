@@ -14,11 +14,15 @@ for vm in $vms; do
     echo "  pid: $pid"
   fi
   . $vm/config.sh
+
+  autostart=$(test $AUTOSTART -ne 0 && echo yes || echo no)
+
   echo "  nic: $NIC"
   echo "  vnc: $VNC"
   echo "  mem: $MEM"
   echo "  cpus: $CPUS"
   echo "  mac: $(dladm show-vnic -po macaddress $NIC)"
+  echo "  autostart: $autostart"
   echo
 done
 
