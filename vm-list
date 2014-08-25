@@ -1,28 +1,15 @@
 #!/bin/bash
+set -e
+
 vms=$(ls -d /vmtank/*)
+props=$(vm-list-props)
 
 for vm in $vms; do
   name=$(basename $vm)
-  pid=$(test -f $vm/pid && cat $vm/pid)
-  pid=$(test -d /proc/$pid && echo $pid)
   echo $name:
-  echo -n "  running: "
-  if [ -z "$pid" ]; then
-    echo "no"
-  else
-    echo "yes"
-    echo "  pid: $pid"
-  fi
-  . $vm/config.sh
 
-  autostart=$(test $AUTOSTART -ne 0 && echo yes || echo no)
-
-  echo "  nic: $NIC"
-  echo "  vnc: $VNC"
-  echo "  mem: $MEM"
-  echo "  cpus: $CPUS"
-  echo "  mac: $(dladm show-vnic -po macaddress $NIC)"
-  echo "  autostart: $autostart"
-  echo
+  for prop in $props; do
+    echo "  $prop: $(vm-get-prop $prop $name)"
+  done
 done
 
