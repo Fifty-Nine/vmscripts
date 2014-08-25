@@ -1,1 +1,41 @@
-/vmtank/$1/run.sh
+#!/bin/bash
+
+set -e
+
+if [ -z "$1" ]; then
+  echo "Usage: vm-start NAME"
+  exit 1
+fi
+
+if [ ! -d /vmtank/$1 ]; then
+  echo "Error: /vmtank/$1 does not exist or is not readable."
+fi
+
+if [ ! -f /vmtank/$1/config.sh ]; then
+  echo "Error: /vmtank/$1/config.sh does not exist or is not readable."
+fi
+
+VM_EXTRA_ARGS=
+. /vmtank/$1/config.sh
+
+MAC=$(dladm show-vnic -po macaddress $NIC)
+
+/usr/bin/qemu-kvm \
+  -runas kvm \
+  -boot order=cd \
+  -enable-kvm \
+  -vnc 0.0.0.0:$VNC \
+  -smp $CPUS \
+  -m $MEM \
+  -no-hpet \
+  -localtime \
+  -drive file=/dev/zvol/rdsk/vmtank/$NAME/disk0,if=virtio,index=0 \
+  -net nic,vlan=0,name=net0,model=virtio,macaddr=$MAC \
+  -net vnic,vlan=0,name=net0,ifname=$NIC,macaddr=$MAC \
+  -vga std \
+  -daemonize \
+  -pidfile /vmtank/$NAME/pid \
+  $VM_EXTRA_ARGS
+
+chmod 770 /vmtank/$NAME/pid
+chown root:kvm /vmtank/$NAME/pid
