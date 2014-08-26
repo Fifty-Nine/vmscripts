@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ):$PATH
+vms=$(vm-brief-list)
+pids=
+
+for vm in $vms; do
+  running=$(vm-get-prop running $vm)
+  if [ $running -eq 1 ]; then
+    echo Stopping $vm
+    pids="$pids $(vm-get-prop pid $vm)"
+    vm-shutdown $vm
+  fi
+done
+
+echo wait $pids
+
+
