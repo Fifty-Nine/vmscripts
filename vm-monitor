@@ -3,5 +3,5 @@
 [ "$1" ] || { echo "Usage: $0 NAME"; exit 1; }
 
 trap "stty sane" 0 1 2 3 15
-/usr/local/bin/socat unix-connect:/vmtank/$1/monitor stdio,raw,echo=0,icanon=0
+/usr/local/bin/socat unix-connect:/vmtank/$1/monitor stdio,raw,echo=0,escape=0x0f,icanon=0
 
