@@ -36,6 +36,7 @@ MAC=$(dladm show-vnic -po macaddress $NIC)
   -daemonize \
   -pidfile /vmtank/$NAME/pid \
   -monitor unix:/vmtank/$NAME/monitor,server,nowait \
+  -qmp unix:/vmtank/$NAME/qmp,server,nowait \
   $VM_EXTRA_ARGS
 
 chmod 770 /vmtank/$NAME/pid
