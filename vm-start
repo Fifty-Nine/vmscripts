@@ -19,18 +19,21 @@ VM_EXTRA_ARGS=
 . /vmtank/$1/config.sh
 
 MAC=$(dladm show-vnic -po macaddress $NIC)
+BOOT_ORDER=${BOOT_ORDER-cd}
+NIC_TYPE=${NIC_TYPE-virtio}
+DISK_TYPE=${DISK_TYPE-virtio}
 
 /usr/bin/qemu-kvm \
   -runas kvm \
-  -boot order=cd \
+  -boot order=$BOOT_ORDER \
   -enable-kvm \
   -vnc 0.0.0.0:$VNC \
   -smp $CPUS \
   -m $MEM \
   -no-hpet \
-  -localtime \
-  -drive file=/dev/zvol/rdsk/vmtank/$NAME/disk0,if=virtio,index=0 \
-  -net nic,vlan=0,name=net0,model=virtio,macaddr=$MAC \
+  -rtc base=utc \
+  -drive file=/dev/zvol/rdsk/vmtank/$NAME/disk0,if=$DISK_TYPE,index=0 \
+  -net nic,vlan=0,name=net0,model=$NIC_TYPE,macaddr=$MAC \
   -net vnic,vlan=0,name=net0,ifname=$NIC,macaddr=$MAC \
   -vga std \
   -daemonize \
